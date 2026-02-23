@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SevereGrowLights – Patches/HydroponicsBasinPatch.xml
+
+  Patches the vanilla HydroponicsBasin ThingDef to accept the
+  SGL_SpectrumController as a linked facility, enabling its Fertility
+  stat offset (+0.40) when the controller is placed adjacent.
+
+  Uses PatchOperationConditional to stay compatible with other mods
+  that may already have added CompAffectedByFacilities to the basin:
+    • If the comp already exists → add our defName to linkableFacilities
+    • If it doesn't exist       → add the whole comp from scratch
+
+  The vanilla HydroponicsBasin has Fertility 2.80 (280%).
+  With one adjacent SGL_SpectrumController it becomes 3.20 (320%),
+  a 14% increase in plant growth rate — noticeable but not game-breaking.
+-->
+<Patch>
+
+  <Operation Class="PatchOperationConditional">
+    <!-- Test: does the basin already have CompAffectedByFacilities? -->
+    <xpath>Defs/ThingDef[defName="HydroponicsBasin"]/comps/li[@Class="CompProperties_AffectedByFacilities"]</xpath>
+
+    <!-- MATCH: comp exists – just append our facility to the existing list -->
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/ThingDef[defName="HydroponicsBasin"]/comps/li[@Class="CompProperties_AffectedByFacilities"]/linkableFacilities</xpath>
+      <value>
+        <li>SGL_SpectrumController</li>
+      </value>
+    </match>
+
+    <!-- NO MATCH: comp absent – add the whole comp with our facility in it -->
+    <nomatch Class="PatchOperationAdd">
+      <xpath>Defs/ThingDef[defName="HydroponicsBasin"]/comps</xpath>
+      <value>
+        <li Class="CompProperties_AffectedByFacilities">
+          <linkableFacilities>
+            <li>SGL_SpectrumController</li>
+          </linkableFacilities>
+        </li>
+      </value>
+    </nomatch>
+  </Operation>
+
+</Patch>

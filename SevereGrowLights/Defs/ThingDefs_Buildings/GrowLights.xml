@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SevereGrowLights – ThingDefs_Buildings/GrowLights.xml
+
+  ══════════════════════════════════════════════════════════════════
+  BALANCING OVERVIEW  (power range: 1200 W → 4000 W)
+  ══════════════════════════════════════════════════════════════════
+  Heat formula:  heatPerSecond  ≈  power × wasteRatio / 560
+  Efficiency  =  1 - wasteRatio  (shown as SGL_LightEfficiency stat)
+
+  Lamp                  Power   Radius  Waste  Heat/s  Efficiency  Breakdown?
+  ──────────────────────────────────────────────────────────────────────────
+  Incandescent           1200 W    R6    0.70   1.5     30%         yes
+  Halogen                1800 W    R7    0.60   1.9     40%         yes
+  Sodium                 2600 W    R8    0.50   2.3     50%         yes
+  LED Mk I (balanced)    2200 W    R8    0.30   0.9     70%         no
+  LED Mk I (red)         2400 W    R8    0.35   1.1     65%         no
+  LED Mk I (blue)        2000 W    R8    0.25   0.7     75%         no
+  Advanced LED           4000 W   R10    0.15   0.5     85%         no
+
+  KEY DESIGN DECISIONS
+  ────────────────────
+  • All lamps use Building_SunLamp thingClass: provides the grow-zone UI
+    circle indicator and inherent day/night cycle scheduling. CompFlickable
+    gives manual override. Full custom hour scheduling requires C#.
+  • CompBreakdownable on tiers 1–3: represents mechanical unreliability
+    of filament and discharge technology (pawns must repair randomly).
+  • LED variants (red/blue) differ mechanically via heat and power draw,
+    creating real biome-based trade-offs without any C#:
+      Red  → more heat/watt → better in cold biomes (heat helps plants)
+      Blue → less heat/watt → better in hot biomes (keeps rooms cool)
+  • SGL_SpectrumController is a passive facility (not a lamp) that boosts
+    adjacent HydroponicsBasin Fertility by +0.40 (280% → 320%) when powered.
+    See Patches/HydroponicsBasinPatch.xml for the corresponding basin patch.
+  • glowColor: ColorInt (R,G,B,0) with channels 0–255.
+  • Advanced component defName: ComponentIndustrialAdv (verify in 1.6 Core).
+-->
+<Defs>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       ABSTRACT BASE  –  shared by all grow lamp tiers
+       ═══════════════════════════════════════════════════════════════ -->
+  <ThingDef Name="SGL_GrowLampBase" ParentName="BuildingBase" Abstract="True">
+
+    <!-- Building_SunLamp: handles power-dependent glow toggle,
+         day/night cycle (lamp on during growing hours), and the
+         yellow "grow zone" UI circle. No C# modifications needed. -->
+    <thingClass>Building_SunLamp</thingClass>
+    <category>Building</category>
+
+    <!-- Placeholder graphic shared by all lamps until custom art is added.
+         Replace texPath in each concrete def with tier-specific art. -->
+    <graphicData>
+      <texPath>Things/Building/Misc/SunLamp</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,2)</drawSize>
+    </graphicData>
+
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <fillPercent>0.20</fillPercent>
+    <blockWind>false</blockWind>
+    <rotatable>false</rotatable>
+
+    <!-- Required by Building_SunLamp for day-cycle tick updates -->
+    <tickerType>Normal</tickerType>
+
+    <statBases>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Flammability>0.5</Flammability>
+      <!-- Industrial grow equipment has neutral-to-negative beauty -->
+      <Beauty>-2</Beauty>
+    </statBases>
+
+    <size>(1,1)</size>
+
+    <building>
+      <ai_chillDestination>false</ai_chillDestination>
+      <uninstallWork>200</uninstallWork>
+    </building>
+
+    <!-- Minifiable: players can pick up and relocate lamps -->
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <thingCategories>
+      <li>BuildingsProduction</li>
+    </thingCategories>
+
+    <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+
+    <designationCategory>Production</designationCategory>
+    <!-- Placed immediately after vanilla SunLamp in the build menu -->
+    <uiOrder>3010</uiOrder>
+
+    <!-- No PlaceWorker_NotUnderRoof → fully valid for enclosed grow rooms -->
+
+  </ThingDef>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       TIER 1 – INCANDESCENT GROW LAMP
+       1200 W | R6 | 1.5 heat/s | 30% efficiency | Breakdown: yes
+       Research: SGL_ElectricAgricultureI
+       ═══════════════════════════════════════════════════════════════ -->
+  <ThingDef ParentName="SGL_GrowLampBase">
+    <defName>SGL_IncandLamp</defName>
+    <label>incandescent grow lamp</label>
+    <description>A rudimentary grow lamp driven by tungsten filament bulbs. The broad-spectrum amber-yellow light is barely adequate for indoor cultivation: only 30% of electrical input reaches plants as useful light, while the rest radiates as waste heat. Cheap to build and available early, but will noticeably warm enclosed growing spaces. Prone to random burnouts requiring manual repair.</description>
+
+    <statBases>
+      <WorkToBuild>400</WorkToBuild>
+      <MarketValue>200</MarketValue>
+      <!-- 30% of draw is useful light; 70% is waste heat -->
+      <SGL_LightEfficiency>0.30</SGL_LightEfficiency>
+    </statBases>
+
+    <costList>
+      <Steel>50</Steel>
+      <Component>1</Component>
+    </costList>
+
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <!-- 1200 W – lowest absolute draw; highest waste ratio in the lineup -->
+        <basePowerConsumption>1200</basePowerConsumption>
+        <shortCircuitInRain>false</shortCircuitInRain>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+      <!-- Warm amber-yellow: incandescent ~2700 K colour temperature -->
+      <li Class="CompProperties_Glower">
+        <glowRadius>6</glowRadius>
+        <glowColor>(255,210,100,0)</glowColor>
+      </li>
+      <!-- 1200 × 0.70 / 560 ≈ 1.5 heat/s; cap 40 °C – rooms become noticeably warm -->
+      <li Class="CompProperties_HeatPusher">
+        <heatPerSecond>1.5</heatPerSecond>
+        <heatPushMaxTemperature>40</heatPushMaxTemperature>
+      </li>
+      <!-- Random breakdowns: represents fragile filament technology.
+           Pawns must repair the lamp to restore function. -->
+      <li Class="CompProperties_Breakdownable"/>
+    </comps>
+
+    <researchPrerequisites>
+      <li>SGL_ElectricAgricultureI</li>
+    </researchPrerequisites>
+  </ThingDef>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       TIER 2 – HALOGEN GROW LAMP
+       1800 W | R7 | 1.9 heat/s | 40% efficiency | Breakdown: yes
+       Research: SGL_ElectricAgricultureII
+       ═══════════════════════════════════════════════════════════════ -->
+  <ThingDef ParentName="SGL_GrowLampBase">
+    <defName>SGL_HalogenLamp</defName>
+    <label>halogen grow lamp</label>
+    <description>An improved grow lamp using halogen tungsten technology. The regenerative halogen cycle sustains a higher filament temperature, producing brighter, slightly whiter light across a wider growing area. Efficiency improves to 40% over incandescent, though significant waste heat and occasional burnouts remain characteristic of the technology. Requires periodic repair.</description>
+
+    <statBases>
+      <WorkToBuild>600</WorkToBuild>
+      <MarketValue>350</MarketValue>
+      <!-- 40% useful light; 60% waste heat -->
+      <SGL_LightEfficiency>0.40</SGL_LightEfficiency>
+    </statBases>
+
+    <costList>
+      <Steel>80</Steel>
+      <Component>2</Component>
+    </costList>
+
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <!-- 1800 W – increased draw over incandescent for wider R7 coverage -->
+        <basePowerConsumption>1800</basePowerConsumption>
+        <shortCircuitInRain>false</shortCircuitInRain>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+      <!-- Warm white: halogen ~3200 K colour temperature -->
+      <li Class="CompProperties_Glower">
+        <glowRadius>7</glowRadius>
+        <glowColor>(255,240,180,0)</glowColor>
+      </li>
+      <!-- 1800 × 0.60 / 560 ≈ 1.9 heat/s; still makes enclosed rooms uncomfortably warm -->
+      <li Class="CompProperties_HeatPusher">
+        <heatPerSecond>1.9</heatPerSecond>
+        <heatPushMaxTemperature>40</heatPushMaxTemperature>
+      </li>
+      <!-- Breakdowns: halogen filaments still fail, though less often than pure incandescent -->
+      <li Class="CompProperties_Breakdownable"/>
+    </comps>
+
+    <researchPrerequisites>
+      <li>SGL_ElectricAgricultureII</li>
+    </researchPrerequisites>
+  </ThingDef>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       TIER 3 – HIGH PRESSURE SODIUM GROW LAMP
+       2600 W | R8 | 2.3 heat/s | 50% efficiency | Breakdown: yes
+       Research: SGL_IndustrialGrowLighting
+       ═══════════════════════════════════════════════════════════════ -->
+  <ThingDef ParentName="SGL_GrowLampBase">
+    <defName>SGL_SodiumLamp</defName>
+    <label>sodium grow lamp</label>
+    <description>A high-pressure sodium (HPS) discharge lamp — the industrial horticulture standard. Excited sodium vapour at high pressure produces a characteristic deep-orange emission significantly brighter per watt than filament predecessors, covering the widest area yet. Half the electrical input still becomes waste heat, and the discharge arc is sensitive to power fluctuations, requiring occasional ballast repair.</description>
+
+    <statBases>
+      <WorkToBuild>800</WorkToBuild>
+      <MarketValue>550</MarketValue>
+      <!-- 50% useful light; 50% waste heat (luminous efficacy ~100 lm/W) -->
+      <SGL_LightEfficiency>0.50</SGL_LightEfficiency>
+    </statBases>
+
+    <costList>
+      <Steel>100</Steel>
+      <Component>4</Component>
+    </costList>
+
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <!-- 2600 W – highest draw of discharge/filament tiers -->
+        <basePowerConsumption>2600</basePowerConsumption>
+        <shortCircuitInRain>false</shortCircuitInRain>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+      <!-- Deep orange: sodium D-line emission at ~589 nm (characteristic HPS colour) -->
+      <li Class="CompProperties_Glower">
+        <glowRadius>8</glowRadius>
+        <glowColor>(255,140,30,0)</glowColor>
+      </li>
+      <!-- 2600 × 0.50 / 560 ≈ 2.3 heat/s; hottest lamp in the lineup – plan cooling -->
+      <li Class="CompProperties_HeatPusher">
+        <heatPerSecond>2.3</heatPerSecond>
+        <heatPushMaxTemperature>40</heatPushMaxTemperature>
+      </li>
+      <!-- Breakdowns: HPS ballasts and arc tubes can fail unexpectedly -->
+      <li Class="CompProperties_Breakdownable"/>
+    </comps>
+
+    <researchPrerequisites>
+      <li>SGL_IndustrialGrowLighting</li>
+    </researchPrerequisites>
+  </ThingDef>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       TIER 4a – LED GROW LAMP MK I  (balanced full-spectrum)
+       2200 W | R8 | 0.9 heat/s | 70% efficiency | Breakdown: no
+       Research: SGL_LEDAgronomy  (HiTechResearchBench + Microelectronics)
+       ═══════════════════════════════════════════════════════════════ -->
+  <ThingDef ParentName="SGL_GrowLampBase">
+    <defName>SGL_LEDLampMk1</defName>
+    <label>LED grow lamp Mk I</label>
+    <description>A first-generation LED grow lamp delivering a balanced blue-red spectrum optimised for full plant life-cycle photosynthesis. Solid-state construction eliminates breakdowns entirely. At 70% efficiency it converts far more electrical input to useful light than any discharge predecessor, and the dramatic reduction in waste heat eases cooling demands. The cool blue-white light feels clinical but the numbers speak for themselves.</description>
+
+    <statBases>
+      <WorkToBuild>1200</WorkToBuild>
+      <MarketValue>900</MarketValue>
+      <!-- 70% useful light; 30% waste heat – the defining LED advantage -->
+      <SGL_LightEfficiency>0.70</SGL_LightEfficiency>
+    </statBases>
+
+    <costList>
+      <Steel>100</Steel>
+      <Component>4</Component>
+      <!-- Solid-state semiconductor engineering requires advanced components -->
+      <ComponentIndustrialAdv>2</ComponentIndustrialAdv>
+    </costList>
+
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <!-- 2200 W – less than Sodium at same R8 radius; the LED efficiency win -->
+        <basePowerConsumption>2200</basePowerConsumption>
+        <shortCircuitInRain>false</shortCircuitInRain>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+      <!-- Cool blue-white: broad balanced LED grow spectrum ~5500–6500 K -->
+      <li Class="CompProperties_Glower">
+        <glowRadius>8</glowRadius>
+        <glowColor>(180,215,255,0)</glowColor>
+      </li>
+      <!-- 2200 × 0.30 / 560 ≈ 0.9 heat/s; LED rooms rarely need extra cooling -->
+      <li Class="CompProperties_HeatPusher">
+        <heatPerSecond>0.9</heatPerSecond>
+        <heatPushMaxTemperature>35</heatPushMaxTemperature>
+      </li>
+      <!-- No CompBreakdownable: solid-state LEDs are highly reliable -->
+    </comps>
+
+    <researchPrerequisites>
+      <li>SGL_LEDAgronomy</li>
+    </researchPrerequisites>
+  </ThingDef>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       TIER 4b – LED GROW LAMP MK I  (red / flowering spectrum)
+       2400 W | R8 | 1.1 heat/s | 65% efficiency | Breakdown: no
+       Research: SGL_LEDAgronomy
+       TRADE-OFF: more heat/watt → better in cold biomes
+       ═══════════════════════════════════════════════════════════════ -->
+  <ThingDef ParentName="SGL_GrowLampBase">
+    <defName>SGL_LEDLampMk1_Red</defName>
+    <label>LED grow lamp Mk I (red)</label>
+    <description>A red-biased LED grow lamp emphasising the 620–700 nm red and 720–740 nm far-red wavelengths that drive flowering and fruiting in most crops. The additional infrared emitters raise power draw and waste heat slightly compared to the balanced variant. In practice, the extra warmth makes this lamp the preferred choice for cold biomes or grow rooms that would otherwise need supplemental heating — the waste heat does double duty.</description>
+
+    <statBases>
+      <WorkToBuild>1200</WorkToBuild>
+      <MarketValue>950</MarketValue>
+      <!-- 65% efficient: red/far-red emitters produce more IR waste than balanced blue-red -->
+      <SGL_LightEfficiency>0.65</SGL_LightEfficiency>
+    </statBases>
+
+    <costList>
+      <Steel>100</Steel>
+      <Component>4</Component>
+      <ComponentIndustrialAdv>2</ComponentIndustrialAdv>
+    </costList>
+
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <!-- 2400 W – slightly higher than balanced; red spectrum wastes more as IR -->
+        <basePowerConsumption>2400</basePowerConsumption>
+        <shortCircuitInRain>false</shortCircuitInRain>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+      <!-- Deep magenta-red: red (660 nm) + far-red (730 nm) grow spectrum -->
+      <li Class="CompProperties_Glower">
+        <glowRadius>8</glowRadius>
+        <glowColor>(200,40,80,0)</glowColor>
+      </li>
+      <!-- 2400 × 0.35 / 560 ≈ 1.1 heat/s; useful in cold biomes – waste heat assists plant temps -->
+      <li Class="CompProperties_HeatPusher">
+        <heatPerSecond>1.1</heatPerSecond>
+        <!-- Higher cap: the extra warmth is desirable in cold-climate grow rooms -->
+        <heatPushMaxTemperature>38</heatPushMaxTemperature>
+      </li>
+    </comps>
+
+    <researchPrerequisites>
+      <li>SGL_LEDAgronomy</li>
+    </researchPrerequisites>
+  </ThingDef>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       TIER 4c – LED GROW LAMP MK I  (blue / vegetative spectrum)
+       2000 W | R8 | 0.7 heat/s | 75% efficiency | Breakdown: no
+       Research: SGL_LEDAgronomy
+       TRADE-OFF: less heat/watt → better in hot biomes
+       ═══════════════════════════════════════════════════════════════ -->
+  <ThingDef ParentName="SGL_GrowLampBase">
+    <defName>SGL_LEDLampMk1_Blue</defName>
+    <label>LED grow lamp Mk I (blue)</label>
+    <description>A blue-biased LED grow lamp concentrated in the 400–500 nm range that stimulates rapid vegetative growth and compact plant structure. Running cooler and drawing less power than the red variant, it is the ideal choice for hot biomes or densely packed grow rooms where excess heat is already a problem. The vivid blue output is unusual to look at but keeps room temperatures tightest of any LED Mk I option.</description>
+
+    <statBases>
+      <WorkToBuild>1200</WorkToBuild>
+      <MarketValue>950</MarketValue>
+      <!-- 75% efficient: blue-shifted emitters produce the least infrared waste -->
+      <SGL_LightEfficiency>0.75</SGL_LightEfficiency>
+    </statBases>
+
+    <costList>
+      <Steel>100</Steel>
+      <Component>4</Component>
+      <ComponentIndustrialAdv>2</ComponentIndustrialAdv>
+    </costList>
+
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <!-- 2000 W – lowest draw of the three LED Mk I variants -->
+        <basePowerConsumption>2000</basePowerConsumption>
+        <shortCircuitInRain>false</shortCircuitInRain>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+      <!-- Vivid blue: concentrated 450–490 nm vegetative grow band -->
+      <li Class="CompProperties_Glower">
+        <glowRadius>8</glowRadius>
+        <glowColor>(80,150,255,0)</glowColor>
+      </li>
+      <!-- 2000 × 0.25 / 560 ≈ 0.7 heat/s; minimal heating – ideal for hot-climate farms -->
+      <li Class="CompProperties_HeatPusher">
+        <heatPerSecond>0.7</heatPerSecond>
+        <!-- Lower cap: keep hot biome rooms as cool as possible -->
+        <heatPushMaxTemperature>32</heatPushMaxTemperature>
+      </li>
+    </comps>
+
+    <researchPrerequisites>
+      <li>SGL_LEDAgronomy</li>
+    </researchPrerequisites>
+  </ThingDef>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       TIER 5 – ADVANCED LED ARRAY
+       4000 W | R10 | 0.5 heat/s | 85% efficiency | Breakdown: no
+       Research: SGL_AdvancedPhotonicCultivation
+                (HiTechResearchBench + MultiAnalyzer facility)
+       ═══════════════════════════════════════════════════════════════ -->
+  <ThingDef ParentName="SGL_GrowLampBase">
+    <defName>SGL_AdvancedLEDArray</defName>
+    <label>advanced LED array</label>
+    <description>A high-density photonic array using computer-controlled emitters tuned precisely to plant photoreceptor absorption peaks. At 85% efficiency, nearly all electrical input is delivered as photosynthetically active radiation across the largest grow radius available. Despite drawing the most total power, waste heat per covered tile is the lowest in the lineup — a single array can illuminate a substantial enclosed operation with negligible thermal overhead. The pinnacle of artificial agricultural lighting.</description>
+
+    <statBases>
+      <WorkToBuild>2000</WorkToBuild>
+      <MarketValue>2200</MarketValue>
+      <!-- 85% useful light; 15% waste heat – near-theoretical ceiling for current technology -->
+      <SGL_LightEfficiency>0.85</SGL_LightEfficiency>
+    </statBases>
+
+    <costList>
+      <Steel>200</Steel>
+      <Component>6</Component>
+      <!-- Precision photonics and spectral control circuitry demand significant advanced components -->
+      <ComponentIndustrialAdv>8</ComponentIndustrialAdv>
+    </costList>
+
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <!-- 4000 W – highest absolute draw, but R10 area (~314 tiles) is by far the widest -->
+        <basePowerConsumption>4000</basePowerConsumption>
+        <shortCircuitInRain>false</shortCircuitInRain>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+      <!-- Bright neutral white with faint blue cast: precision full-spectrum LED array -->
+      <li Class="CompProperties_Glower">
+        <glowRadius>10</glowRadius>
+        <glowColor>(210,238,255,0)</glowColor>
+      </li>
+      <!-- 4000 × 0.15 / 560 ≈ 0.5 heat/s; negligible room heating even at peak output -->
+      <li Class="CompProperties_HeatPusher">
+        <heatPerSecond>0.5</heatPerSecond>
+        <!-- Low cap: advanced LED will never meaningfully heat a properly ventilated room -->
+        <heatPushMaxTemperature>30</heatPushMaxTemperature>
+      </li>
+    </comps>
+
+    <researchPrerequisites>
+      <li>SGL_AdvancedPhotonicCultivation</li>
+    </researchPrerequisites>
+  </ThingDef>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       HYDROPONICS SYNERGY FACILITY – SPECTRUM CONTROLLER
+       150 W | 1×1 | Fertility +0.40 on adjacent HydroponicsBasin
+       Research: SGL_LEDAgronomy
+       ═══════════════════════════════════════════════════════════════
+       The SpectrumController is NOT a grow lamp. It is a compact
+       control unit that fine-tunes the spectral output of adjacent
+       LED systems to maximise photosynthetic response in hydroponics
+       basins. Mechanically it is a Facility (same pattern as the
+       vanilla MultiAnalyzer boosting HiTechResearchBench):
+         • Must be placed cardinally adjacent to a HydroponicsBasin
+         • Applies Fertility +0.40 to that basin when powered
+         • Limited to boosting one basin at a time
+
+       HydroponicsBasin Fertility: 2.80 base + 0.40 = 3.20 (280→320%)
+       See Patches/HydroponicsBasinPatch.xml for the other half.
+       TODO: replace texPath with custom art (small console/panel)
+       ═══════════════════════════════════════════════════════════════ -->
+  <ThingDef ParentName="BuildingBase">
+    <defName>SGL_SpectrumController</defName>
+    <label>spectrum controller</label>
+    <description>A compact closed-loop controller that monitors the spectral composition of adjacent LED grow lamps and adjusts drive currents in real time to maximise the photosynthetically active radiation absorbed by the crop below. When installed next to a hydroponics basin it measurably increases plant growth rate. Requires a powered LED Agronomy lamp in the same room to be meaningful.</description>
+
+    <thingClass>Building</thingClass>
+    <category>Building</category>
+
+    <!-- TODO: replace with custom art once available -->
+    <graphicData>
+      <texPath>Things/Building/Misc/SunLamp</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(1,1)</drawSize>
+    </graphicData>
+
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <fillPercent>0.15</fillPercent>
+    <blockWind>false</blockWind>
+    <rotatable>true</rotatable>
+
+    <statBases>
+      <MaxHitPoints>80</MaxHitPoints>
+      <Flammability>0.5</Flammability>
+      <WorkToBuild>800</WorkToBuild>
+      <MarketValue>500</MarketValue>
+      <Beauty>-1</Beauty>
+    </statBases>
+
+    <size>(1,1)</size>
+
+    <building>
+      <ai_chillDestination>false</ai_chillDestination>
+      <uninstallWork>150</uninstallWork>
+    </building>
+
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <thingCategories>
+      <li>BuildingsProduction</li>
+    </thingCategories>
+
+    <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+
+    <costList>
+      <Steel>50</Steel>
+      <!-- Precision spectral electronics require advanced components -->
+      <ComponentIndustrialAdv>4</ComponentIndustrialAdv>
+    </costList>
+
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <!-- 150 W – minimal draw for control electronics only -->
+        <basePowerConsumption>150</basePowerConsumption>
+        <shortCircuitInRain>false</shortCircuitInRain>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+      <!--
+        Facility comp: boosts Fertility on an adjacent HydroponicsBasin by +0.40.
+        Mirrors the vanilla MultiAnalyzer pattern (CompProperties_Facility on the
+        facility building; CompAffectedByFacilities patched onto the target).
+        maxSimultaneouslyUsed 1: one controller boosts exactly one basin at a time.
+        mustBePlacedAdjacentCardinalToBuildingOfType: enforces placement discipline.
+      -->
+      <li Class="CompProperties_Facility">
+        <statOffsets>
+          <!-- HydroponicsBasin base Fertility is 2.80; +0.40 → 3.20 (a ~14% growth boost) -->
+          <Fertility>0.40</Fertility>
+        </statOffsets>
+        <maxSimultaneouslyUsed>1</maxSimultaneouslyUsed>
+        <mustBePlacedAdjacentCardinalToBuildingOfType>HydroponicsBasin</mustBePlacedAdjacentCardinalToBuildingOfType>
+      </li>
+    </comps>
+
+    <designationCategory>Production</designationCategory>
+    <!-- Placed after all grow lamps in the build menu -->
+    <uiOrder>3020</uiOrder>
+
+    <researchPrerequisites>
+      <li>SGL_LEDAgronomy</li>
+    </researchPrerequisites>
+  </ThingDef>
+
+</Defs>

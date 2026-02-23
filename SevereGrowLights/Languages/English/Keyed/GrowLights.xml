@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SevereGrowLights – Languages/English/Keyed/GrowLights.xml
+
+  Keyed strings are for UI text referenced by C# code via Translate().
+  Because this mod is XML-only (no C# code), there are no keyed strings
+  required at this time.
+
+  All grow lamp and research labels/descriptions are defined inline within
+  their respective ThingDefs and ResearchProjectDefs.
+
+  Translators working on other languages should create:
+    Languages/<Language>/DefInjected/ThingDef/GrowLights.xml
+    Languages/<Language>/DefInjected/ResearchProjectDef/GrowLightResearch.xml
+  and mirror the <label> and <description> fields from the English defs.
+-->
+<LanguageData>
+</LanguageData>

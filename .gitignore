@@ -1,0 +1,28 @@
+# Claude Code tool internals – never commit
+.claude/
+
+# OS artefacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor artefacts
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# RimWorld mod development
+# Compiled C# (if any is added later)
+*.dll
+*.pdb
+*.mdb
+bin/
+obj/
+
+# Mod manager / workshop staging folders
+_PublisherPlus.xml
+PublishedFileId.txt

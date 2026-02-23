@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SevereGrowLights – StatDefs/GrowLightStats.xml
+
+  Defines one custom stat used by all grow lamp ThingDefs:
+    SGL_LightEfficiency – the fraction of electrical input converted to
+    photosynthetically useful light (remainder is waste heat).
+    Displayed as a percentage in the building info card.
+
+  Values by tier (hardcoded in each ThingDef's statBases):
+    Incandescent   0.30  (30%)
+    Halogen        0.40  (40%)
+    Sodium         0.50  (50%)
+    LED Mk I       0.70  (70%)
+    LED Red        0.65  (65%)  – red-biased; more IR waste
+    LED Blue       0.75  (75%)  – blue-biased; less IR waste
+    Advanced LED   0.85  (85%)
+-->
+<Defs>
+
+  <StatDef>
+    <defName>SGL_LightEfficiency</defName>
+    <label>light efficiency</label>
+    <description>The proportion of electrical power converted to useful plant-growth light rather than waste heat. Higher values mean less heat generated per watt consumed. LED technology achieves dramatically higher efficiency than filament or discharge lamp predecessors.</description>
+    <!-- Appears in the Building stat group in the info card -->
+    <category>Building</category>
+    <!-- 0.30 displays as "30%", 0.85 displays as "85%" -->
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>0.5</defaultBaseValue>
+    <minValue>0</minValue>
+    <maxValue>1</maxValue>
+    <!-- Not relevant to pawns -->
+    <showOnPawnInspectTab>false</showOnPawnInspectTab>
+    <!-- Hide on buildings that haven't set this stat explicitly -->
+    <showIfUndefined>false</showIfUndefined>
+  </StatDef>
+
+</Defs>

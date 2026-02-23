@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SevereGrowLights – ResearchProjectDefs/GrowLightResearch.xml
+
+  RESEARCH CHAIN
+  ══════════════
+  Electricity (vanilla)
+    └─ SGL_ElectricAgricultureI   (400)   → Incandescent Grow Lamp
+         └─ SGL_ElectricAgricultureII  (600)   → Halogen Grow Lamp
+               └─ SGL_IndustrialGrowLighting (1000)  → Sodium Grow Lamp
+                     └─ SGL_LEDAgronomy          (1600)  → LED Grow Lamp Mk I
+                          [also needs: Microelectronics, HiTechResearchBench]
+                             └─ SGL_AdvancedPhotonicCultivation (2400) → Advanced LED Array
+                                  [also needs: HiTechResearchBench + MultiAnalyzer]
+
+  researchViewX/Y place nodes in the custom "Grow Lighting" tab.
+  A custom tab keeps the five projects grouped and avoids crowding vanilla tabs.
+-->
+<Defs>
+
+  <!-- ─────────────────────────────────────────────────────────────
+       CUSTOM RESEARCH TAB
+       displayOrder 98 places it near the end of the tab bar but
+       before any "Ultra" or spacer-level mods that use 99+.
+       ───────────────────────────────────────────────────────────── -->
+  <ResearchTabDef>
+    <defName>SGL_GrowLighting</defName>
+    <label>Grow Lighting</label>
+    <displayOrder>98</displayOrder>
+  </ResearchTabDef>
+
+
+  <!-- ─────────────────────────────────────────────────────────────
+       TIER 1 – ELECTRIC AGRICULTURE I
+       Unlocks: SGL_IncandLamp (Incandescent Grow Lamp)
+       Cost: 400 | Industrial | Bench: any
+       Prerequisite: vanilla Electricity
+       ───────────────────────────────────────────────────────────── -->
+  <ResearchProjectDef>
+    <defName>SGL_ElectricAgricultureI</defName>
+    <label>Electric Agriculture I</label>
+    <description>Apply electrical lighting to indoor crop cultivation. Study how incandescent filament lamps can substitute for sunlight in enclosed growing spaces, enabling year-round food production independent of season or weather. Unlocks the incandescent grow lamp — wasteful but accessible.</description>
+    <baseCost>400</baseCost>
+    <techLevel>Industrial</techLevel>
+    <tab>SGL_GrowLighting</tab>
+    <prerequisites>
+      <!-- Requires basic colony electricity before artificial grow lighting -->
+      <li>Electricity</li>
+    </prerequisites>
+    <researchViewX>1.00</researchViewX>
+    <researchViewY>0.70</researchViewY>
+  </ResearchProjectDef>
+
+
+  <!-- ─────────────────────────────────────────────────────────────
+       TIER 2 – ELECTRIC AGRICULTURE II
+       Unlocks: SGL_HalogenLamp (Halogen Grow Lamp)
+       Cost: 600 | Industrial | Bench: any
+       Prerequisite: SGL_ElectricAgricultureI
+       ───────────────────────────────────────────────────────────── -->
+  <ResearchProjectDef>
+    <defName>SGL_ElectricAgricultureII</defName>
+    <label>Electric Agriculture II</label>
+    <description>Refine indoor grow lighting using halogen tungsten technology. The halogen regenerative cycle allows a higher filament temperature, producing a brighter output with marginally improved efficacy over basic incandescent lamps. Covers a wider grow footprint at the cost of even higher surface temperatures. Unlocks the halogen grow lamp.</description>
+    <baseCost>600</baseCost>
+    <techLevel>Industrial</techLevel>
+    <tab>SGL_GrowLighting</tab>
+    <prerequisites>
+      <li>SGL_ElectricAgricultureI</li>
+    </prerequisites>
+    <researchViewX>2.00</researchViewX>
+    <researchViewY>0.70</researchViewY>
+  </ResearchProjectDef>
+
+
+  <!-- ─────────────────────────────────────────────────────────────
+       TIER 3 – INDUSTRIAL GROW LIGHTING
+       Unlocks: SGL_SodiumLamp (Sodium Grow Lamp)
+       Cost: 1000 | Industrial | Bench: any
+       Prerequisite: SGL_ElectricAgricultureII
+       ───────────────────────────────────────────────────────────── -->
+  <ResearchProjectDef>
+    <defName>SGL_IndustrialGrowLighting</defName>
+    <label>Industrial Grow Lighting</label>
+    <description>Apply high-pressure sodium discharge lamp technology to enclosed horticulture. HPS lamps achieve far greater luminous efficacy than filament-based predecessors by exciting sodium vapour to emit intense orange light. A larger grow area is covered per unit, though the technology still produces considerable waste heat and requires a brief warm-up period. Unlocks the sodium grow lamp.</description>
+    <baseCost>1000</baseCost>
+    <techLevel>Industrial</techLevel>
+    <tab>SGL_GrowLighting</tab>
+    <prerequisites>
+      <li>SGL_ElectricAgricultureII</li>
+    </prerequisites>
+    <researchViewX>3.00</researchViewX>
+    <researchViewY>0.70</researchViewY>
+  </ResearchProjectDef>
+
+
+  <!-- ─────────────────────────────────────────────────────────────
+       TIER 4 – LED AGRONOMY
+       Unlocks: SGL_LEDLampMk1 (LED Grow Lamp Mk I)
+       Cost: 1600 | Spacer | Bench: HiTechResearchBench
+       Prerequisites: SGL_IndustrialGrowLighting + Microelectronics
+       ───────────────────────────────────────────────────────────── -->
+  <ResearchProjectDef>
+    <defName>SGL_LEDAgronomy</defName>
+    <label>LED Agronomy</label>
+    <description>Pioneer the application of solid-state LED emitters to controlled-environment agriculture. Unlike discharge or filament sources, LEDs can target specific wavelengths corresponding to plant photoreceptor absorption peaks, dramatically increasing the proportion of electrical input converted to photosynthetically useful light. Waste heat is reduced by more than half compared to sodium technology. Unlocks the LED grow lamp Mk I.</description>
+    <baseCost>1600</baseCost>
+    <techLevel>Spacer</techLevel>
+    <tab>SGL_GrowLighting</tab>
+    <prerequisites>
+      <li>SGL_IndustrialGrowLighting</li>
+      <!-- Solid-state lighting requires advanced microelectronics knowledge -->
+      <li>Microelectronics</li>
+    </prerequisites>
+    <!-- Requires advanced research infrastructure -->
+    <requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+    <researchViewX>4.00</researchViewX>
+    <researchViewY>0.70</researchViewY>
+  </ResearchProjectDef>
+
+
+  <!-- ─────────────────────────────────────────────────────────────
+       TIER 5 – ADVANCED PHOTONIC CULTIVATION
+       Unlocks: SGL_AdvancedLEDArray (Advanced LED Array)
+       Cost: 2400 | Spacer | Bench: HiTechResearchBench + MultiAnalyzer
+       Prerequisite: SGL_LEDAgronomy
+       ───────────────────────────────────────────────────────────── -->
+  <ResearchProjectDef>
+    <defName>SGL_AdvancedPhotonicCultivation</defName>
+    <label>Advanced Photonic Cultivation</label>
+    <description>Engineer a high-density photonic array with computer-controlled spectral output. By modelling precise plant photoreceptor responses and dynamically tuning emission wavelengths, nearly all electrical input is converted to photosynthetically active radiation. The resulting system covers the largest grow area of any artificial lamp while generating negligible waste heat — the theoretical ceiling of practical horticultural illumination. Unlocks the advanced LED array.</description>
+    <baseCost>2400</baseCost>
+    <techLevel>Spacer</techLevel>
+    <tab>SGL_GrowLighting</tab>
+    <prerequisites>
+      <li>SGL_LEDAgronomy</li>
+    </prerequisites>
+    <!-- Requires hi-tech bench AND multi-analyser facility -->
+    <requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+    <requiredResearchFacilities>
+      <li>MultiAnalyzer</li>
+    </requiredResearchFacilities>
+    <researchViewX>5.00</researchViewX>
+    <researchViewY>0.70</researchViewY>
+  </ResearchProjectDef>
+
+</Defs>
