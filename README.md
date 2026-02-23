@@ -123,6 +123,6 @@ SevereGrowLights/
 
 ---
 
-## Licence
+## License
 
 [MIT](LICENSE)
