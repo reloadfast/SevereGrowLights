@@ -38,14 +38,6 @@ Three flavours of the Mk I unlock together at *LED Agronomy*. The mechanical dif
 
 ---
 
-## Spectrum Controller
-
-Unlocked at *LED Agronomy*, the **Spectrum Controller** is a compact 150 W facility unit (not a lamp) placed cardinally adjacent to a Hydroponics Basin. When powered it boosts that basin's Fertility from 280% to **320%** — a ~14% increase in plant growth rate.
-
-This follows the same facility pattern as the vanilla Multi-Analyser boosting the Hi-Tech Research Bench: one controller boosts exactly one basin.
-
----
-
 ## Research chain
 
 All five projects appear in a dedicated **Grow Lighting** research tab.
@@ -56,8 +48,8 @@ Electricity  (vanilla)
        └─ Electric Agriculture II     600 pt  · Industrial  · any bench
              └─ Industrial Grow Lighting  1000 pt  · Industrial  · any bench
                    └─ LED Agronomy           1600 pt  · Spacer
-                        requires: Microelectronics + Hi-Tech Research Bench
-                        unlocks: all three LED Mk I variants + Spectrum Controller
+                        requires: MicroelectronicsBasics + Hi-Tech Research Bench
+                        unlocks: all three LED Mk I variants
                           └─ Advanced Photonic Cultivation  2400 pt  · Spacer
                                requires: Hi-Tech Research Bench + Multi-Analyser
 ```
@@ -73,7 +65,6 @@ Filament and discharge lamps (Incandescent, Halogen, Sodium) include `CompBreakd
 ## Compatibility
 
 - **Vanilla:** fully compatible, no vanilla defs modified
-- **Hydroponics Basin patch:** uses `PatchOperationConditional` — safe to load alongside other mods that already add `CompAffectedByFacilities` to the basin
 - **No DLC dependency**
 - **No Harmony**
 
@@ -94,7 +85,6 @@ RimWorld/Mods/
 └── SevereGrowLights/
     ├── About/
     ├── Defs/
-    ├── Patches/
     └── Languages/
 ```
 
@@ -108,13 +98,11 @@ SevereGrowLights/
 │   └── About.xml
 ├── Defs/
 │   ├── ThingDefs_Buildings/
-│   │   └── GrowLights.xml          ← all lamps + SpectrumController
+│   │   └── GrowLights.xml          ← all lamps
 │   ├── ResearchProjectDefs/
 │   │   └── GrowLightResearch.xml   ← research tab + 5 projects
 │   └── StatDefs/
 │       └── GrowLightStats.xml      ← SGL_LightEfficiency stat
-├── Patches/
-│   └── HydroponicsBasinPatch.xml   ← facility link on HydroponicsBasin
 └── Languages/
     └── English/
         └── Keyed/

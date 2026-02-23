@@ -29,9 +29,6 @@
     creating real biome-based trade-offs without any C#:
       Red  → more heat/watt → better in cold biomes (heat helps plants)
       Blue → less heat/watt → better in hot biomes (keeps rooms cool)
-  • SGL_SpectrumController is a passive facility (not a lamp) that boosts
-    adjacent HydroponicsBasin Fertility by +0.40 (280% → 320%) when powered.
-    See Patches/HydroponicsBasinPatch.xml for the corresponding basin patch.
   • glowColor: ColorInt (R,G,B,0) with channels 0–255.
   • Advanced component defName: ComponentSpacer (verified in 1.6 Core).
 -->
@@ -457,103 +454,6 @@
 
     <researchPrerequisites>
       <li>SGL_AdvancedPhotonicCultivation</li>
-    </researchPrerequisites>
-  </ThingDef>
-
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       HYDROPONICS SYNERGY FACILITY – SPECTRUM CONTROLLER
-       150 W | 1×1 | Fertility +0.40 on adjacent HydroponicsBasin
-       Research: SGL_LEDAgronomy
-       ═══════════════════════════════════════════════════════════════
-       The SpectrumController is NOT a grow lamp. It is a compact
-       control unit that fine-tunes the spectral output of adjacent
-       LED systems to maximise photosynthetic response in hydroponics
-       basins. Mechanically it is a Facility (same pattern as the
-       vanilla MultiAnalyzer boosting HiTechResearchBench):
-         • Must be placed cardinally adjacent to a HydroponicsBasin
-         • Applies Fertility +0.40 to that basin when powered
-         • Limited to boosting one basin at a time
-
-       HydroponicsBasin Fertility: 2.80 base + 0.40 = 3.20 (280→320%)
-       See Patches/HydroponicsBasinPatch.xml for the other half.
-       TODO: replace texPath with custom art (small console/panel)
-       ═══════════════════════════════════════════════════════════════ -->
-  <ThingDef ParentName="BuildingBase">
-    <defName>SGL_SpectrumController</defName>
-    <label>spectrum controller</label>
-    <description>A compact closed-loop controller that monitors the spectral composition of adjacent LED grow lamps and adjusts drive currents in real time to maximise the photosynthetically active radiation absorbed by the crop below. When installed next to a hydroponics basin it measurably increases plant growth rate. Requires a powered LED Agronomy lamp in the same room to be meaningful.</description>
-
-    <thingClass>Building</thingClass>
-    <category>Building</category>
-
-    <!-- TODO: replace with custom art once available -->
-    <graphicData>
-      <texPath>Things/Building/Production/LampSun</texPath>
-      <graphicClass>Graphic_Single</graphicClass>
-      <drawSize>(1,1)</drawSize>
-    </graphicData>
-
-    <altitudeLayer>Building</altitudeLayer>
-    <passability>PassThroughOnly</passability>
-    <fillPercent>0.15</fillPercent>
-    <blockWind>false</blockWind>
-    <rotatable>true</rotatable>
-
-    <statBases>
-      <MaxHitPoints>80</MaxHitPoints>
-      <Flammability>0.5</Flammability>
-      <WorkToBuild>800</WorkToBuild>
-      <MarketValue>500</MarketValue>
-      <Beauty>-1</Beauty>
-      <Mass>6</Mass>
-    </statBases>
-
-    <size>(1,1)</size>
-
-    <building>
-      <ai_chillDestination>false</ai_chillDestination>
-      <uninstallWork>150</uninstallWork>
-    </building>
-
-    <minifiedDef>MinifiedThing</minifiedDef>
-    <thingCategories>
-      <li>BuildingsProduction</li>
-    </thingCategories>
-
-    <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
-
-    <costList>
-      <Steel>50</Steel>
-      <!-- Precision spectral electronics require advanced components -->
-      <ComponentSpacer>4</ComponentSpacer>
-    </costList>
-
-    <comps>
-      <li Class="CompProperties_Power">
-        <compClass>CompPowerTrader</compClass>
-        <!-- 150 W – minimal draw for control electronics only -->
-        <basePowerConsumption>150</basePowerConsumption>
-        <shortCircuitInRain>false</shortCircuitInRain>
-      </li>
-      <li Class="CompProperties_Flickable"/>
-      <!--
-        Facility comp: registers the controller as a linkable facility so the
-        basin patch (HydroponicsBasinPatch.xml) can establish the visual link.
-        NOTE: HydroponicsBasin.fertility is a top-level ThingDef field, not a
-        StatDef, so a stat offset cannot boost it in pure XML. A C# Comp would
-        be required to apply a growth multiplier. The link is kept for future
-        extension and visual feedback.
-      -->
-      <li Class="CompProperties_Facility"/>
-    </comps>
-
-    <designationCategory>Production</designationCategory>
-    <!-- Placed after all grow lamps in the build menu -->
-    <uiOrder>3020</uiOrder>
-
-    <researchPrerequisites>
-      <li>SGL_LEDAgronomy</li>
     </researchPrerequisites>
   </ThingDef>
 

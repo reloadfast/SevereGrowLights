@@ -20,13 +20,11 @@
 
   <!-- ─────────────────────────────────────────────────────────────
        CUSTOM RESEARCH TAB
-       displayOrder 98 places it near the end of the tab bar but
-       before any "Ultra" or spacer-level mods that use 99+.
+       Note: displayOrder is not a valid field on ResearchTabDef in 1.6.
        ───────────────────────────────────────────────────────────── -->
   <ResearchTabDef>
     <defName>SGL_GrowLighting</defName>
     <label>Grow Lighting</label>
-    <displayOrder>98</displayOrder>
   </ResearchTabDef>
 
 
