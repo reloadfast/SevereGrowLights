@@ -4,7 +4,7 @@ A RimWorld 1.6 mod that adds five tiers of artificial grow lights modelled on th
 
 Each tier provides progressively wider light coverage and better energy efficiency, while generating heat proportional to its inefficiency — early lamps heat grow rooms noticeably, LED tiers barely register. Unlocked through a dedicated five-stage research chain.
 
-**No DLC required. No Harmony patches. XML-only.**
+**No DLC required. No Harmony patches**
 
 ---
 
@@ -75,7 +75,7 @@ Filament and discharge lamps (Incandescent, Halogen, Sodium) include `CompBreakd
 - **Vanilla:** fully compatible, no vanilla defs modified
 - **Hydroponics Basin patch:** uses `PatchOperationConditional` — safe to load alongside other mods that already add `CompAffectedByFacilities` to the basin
 - **No DLC dependency**
-- **No Harmony / no C#**
+- **No Harmony**
 
 ---
 
@@ -120,17 +120,6 @@ SevereGrowLights/
         └── Keyed/
             └── GrowLights.xml      ← translator placeholder
 ```
-
----
-
-## Contributing
-
-Pull requests welcome. A few notes for contributors:
-
-- All defNames use the `SGL_` prefix
-- Heat is intentional — do not normalise it away; the hot early tiers are a design goal
-- If adding a new tier, add a matching `ResearchProjectDef` in `GrowLightResearch.xml` and update the table in this README and `CLAUDE.md`
-- Verify these vanilla defNames against your 1.6 Core before adding C# dependencies: `Building_SunLamp`, `ComponentIndustrialAdv`, `HiTechResearchBench`, `MultiAnalyzer`, `Fertility` (stat on HydroponicsBasin)
 
 ---
 
