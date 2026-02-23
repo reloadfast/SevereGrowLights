@@ -45,8 +45,7 @@
     <thingClass>Building_SunLamp</thingClass>
     <category>Building</category>
 
-    <!-- Placeholder graphic shared by all lamps until custom art is added.
-         Replace texPath in each concrete def with tier-specific art. -->
+    <!-- Fallback graphic (overridden by texPath in each concrete def). -->
     <graphicData>
       <texPath>Things/Building/Production/LampSun</texPath>
       <graphicClass>Graphic_Single</graphicClass>
@@ -103,6 +102,10 @@
   <ThingDef ParentName="SGL_GrowLampBase">
     <defName>SGL_IncandLamp</defName>
     <label>incandescent grow lamp</label>
+    <graphicData>
+      <texPath>Things/Building/Production/SGL_IncandLamp</texPath>
+    </graphicData>
+    <uiIconPath>UI/Icons/SGL_IncandLamp</uiIconPath>
     <!-- Drives Building_SunLamp.GrowRadius: controls placement/selection ring
          and the radius used by the "Create growing zone" gizmo. -->
     <specialDisplayRadius>6</specialDisplayRadius>
@@ -158,6 +161,10 @@
   <ThingDef ParentName="SGL_GrowLampBase">
     <defName>SGL_HalogenLamp</defName>
     <label>halogen grow lamp</label>
+    <graphicData>
+      <texPath>Things/Building/Production/SGL_HalogenLamp</texPath>
+    </graphicData>
+    <uiIconPath>UI/Icons/SGL_HalogenLamp</uiIconPath>
     <specialDisplayRadius>7</specialDisplayRadius>
     <description>An improved grow lamp using halogen tungsten technology. The regenerative halogen cycle sustains a higher filament temperature, producing brighter, slightly whiter light across a wider growing area. Efficiency improves to 40% over incandescent, though significant waste heat and occasional burnouts remain characteristic of the technology. Requires periodic repair.</description>
 
@@ -210,6 +217,10 @@
   <ThingDef ParentName="SGL_GrowLampBase">
     <defName>SGL_SodiumLamp</defName>
     <label>sodium grow lamp</label>
+    <graphicData>
+      <texPath>Things/Building/Production/SGL_SodiumLamp</texPath>
+    </graphicData>
+    <uiIconPath>UI/Icons/SGL_SodiumLamp</uiIconPath>
     <specialDisplayRadius>8</specialDisplayRadius>
     <description>A high-pressure sodium (HPS) discharge lamp — the industrial horticulture standard. Excited sodium vapour at high pressure produces a characteristic deep-orange emission significantly brighter per watt than filament predecessors, covering the widest area yet. Half the electrical input still becomes waste heat, and the discharge arc is sensitive to power fluctuations, requiring occasional ballast repair.</description>
 
@@ -262,6 +273,10 @@
   <ThingDef ParentName="SGL_GrowLampBase">
     <defName>SGL_LEDLampMkI</defName>
     <label>LED grow lamp Mk I</label>
+    <graphicData>
+      <texPath>Things/Building/Production/SGL_LEDLampMkI</texPath>
+    </graphicData>
+    <uiIconPath>UI/Icons/SGL_LEDLampMkI</uiIconPath>
     <specialDisplayRadius>8</specialDisplayRadius>
     <description>A first-generation LED grow lamp delivering a balanced blue-red spectrum optimised for full plant life-cycle photosynthesis. Solid-state construction eliminates breakdowns entirely. At 70% efficiency it converts far more electrical input to useful light than any discharge predecessor, and the dramatic reduction in waste heat eases cooling demands. The cool blue-white light feels clinical but the numbers speak for themselves.</description>
 
@@ -316,6 +331,10 @@
   <ThingDef ParentName="SGL_GrowLampBase">
     <defName>SGL_LEDLampMkI_Red</defName>
     <label>LED grow lamp Mk I (red)</label>
+    <graphicData>
+      <texPath>Things/Building/Production/SGL_LEDLampMkI_Red</texPath>
+    </graphicData>
+    <uiIconPath>UI/Icons/SGL_LEDLampMkI_Red</uiIconPath>
     <specialDisplayRadius>8</specialDisplayRadius>
     <description>A red-biased LED grow lamp emphasising the 620–700 nm red and 720–740 nm far-red wavelengths that drive flowering and fruiting in most crops. The additional infrared emitters raise power draw and waste heat slightly compared to the balanced variant. In practice, the extra warmth makes this lamp the preferred choice for cold biomes or grow rooms that would otherwise need supplemental heating — the waste heat does double duty.</description>
 
@@ -369,6 +388,10 @@
   <ThingDef ParentName="SGL_GrowLampBase">
     <defName>SGL_LEDLampMkI_Blue</defName>
     <label>LED grow lamp Mk I (blue)</label>
+    <graphicData>
+      <texPath>Things/Building/Production/SGL_LEDLampMkI_Blue</texPath>
+    </graphicData>
+    <uiIconPath>UI/Icons/SGL_LEDLampMkI_Blue</uiIconPath>
     <specialDisplayRadius>8</specialDisplayRadius>
     <description>A blue-biased LED grow lamp concentrated in the 400–500 nm range that stimulates rapid vegetative growth and compact plant structure. Running cooler and drawing less power than the red variant, it is the ideal choice for hot biomes or densely packed grow rooms where excess heat is already a problem. The vivid blue output is unusual to look at but keeps room temperatures tightest of any LED Mk I option.</description>
 
@@ -422,6 +445,10 @@
   <ThingDef ParentName="SGL_GrowLampBase">
     <defName>SGL_AdvancedLEDArray</defName>
     <label>advanced LED array</label>
+    <graphicData>
+      <texPath>Things/Building/Production/SGL_AdvancedLEDArray</texPath>
+    </graphicData>
+    <uiIconPath>UI/Icons/SGL_AdvancedLEDArray</uiIconPath>
     <specialDisplayRadius>10</specialDisplayRadius>
     <description>A high-density photonic array using computer-controlled emitters tuned precisely to plant photoreceptor absorption peaks. At 85% efficiency, nearly all electrical input is delivered as photosynthetically active radiation across the largest grow radius available. Despite drawing the most total power, waste heat per covered tile is the lowest in the lineup — a single array can illuminate a substantial enclosed operation with negligible thermal overhead. The pinnacle of artificial agricultural lighting.</description>
 
