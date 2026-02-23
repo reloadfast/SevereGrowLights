@@ -33,7 +33,7 @@
     adjacent HydroponicsBasin Fertility by +0.40 (280% → 320%) when powered.
     See Patches/HydroponicsBasinPatch.xml for the corresponding basin patch.
   • glowColor: ColorInt (R,G,B,0) with channels 0–255.
-  • Advanced component defName: ComponentIndustrialAdv (verify in 1.6 Core).
+  • Advanced component defName: ComponentSpacer (verified in 1.6 Core).
 -->
 <Defs>
 
@@ -51,7 +51,7 @@
     <!-- Placeholder graphic shared by all lamps until custom art is added.
          Replace texPath in each concrete def with tier-specific art. -->
     <graphicData>
-      <texPath>Things/Building/Misc/SunLamp</texPath>
+      <texPath>Things/Building/Production/LampSun</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(2,2)</drawSize>
     </graphicData>
@@ -70,6 +70,8 @@
       <Flammability>0.5</Flammability>
       <!-- Industrial grow equipment has neutral-to-negative beauty -->
       <Beauty>-2</Beauty>
+      <!-- Required: minifiable buildings must declare an authored mass -->
+      <Mass>12</Mass>
     </statBases>
 
     <size>(1,1)</size>
@@ -111,11 +113,12 @@
       <MarketValue>200</MarketValue>
       <!-- 30% of draw is useful light; 70% is waste heat -->
       <SGL_LightEfficiency>0.30</SGL_LightEfficiency>
+      <Mass>8</Mass>
     </statBases>
 
     <costList>
       <Steel>50</Steel>
-      <Component>1</Component>
+      <ComponentIndustrial>1</ComponentIndustrial>
     </costList>
 
     <comps>
@@ -162,11 +165,12 @@
       <MarketValue>350</MarketValue>
       <!-- 40% useful light; 60% waste heat -->
       <SGL_LightEfficiency>0.40</SGL_LightEfficiency>
+      <Mass>10</Mass>
     </statBases>
 
     <costList>
       <Steel>80</Steel>
-      <Component>2</Component>
+      <ComponentIndustrial>2</ComponentIndustrial>
     </costList>
 
     <comps>
@@ -212,11 +216,12 @@
       <MarketValue>550</MarketValue>
       <!-- 50% useful light; 50% waste heat (luminous efficacy ~100 lm/W) -->
       <SGL_LightEfficiency>0.50</SGL_LightEfficiency>
+      <Mass>12</Mass>
     </statBases>
 
     <costList>
       <Steel>100</Steel>
-      <Component>4</Component>
+      <ComponentIndustrial>4</ComponentIndustrial>
     </costList>
 
     <comps>
@@ -253,7 +258,7 @@
        Research: SGL_LEDAgronomy  (HiTechResearchBench + Microelectronics)
        ═══════════════════════════════════════════════════════════════ -->
   <ThingDef ParentName="SGL_GrowLampBase">
-    <defName>SGL_LEDLampMk1</defName>
+    <defName>SGL_LEDLampMkI</defName>
     <label>LED grow lamp Mk I</label>
     <description>A first-generation LED grow lamp delivering a balanced blue-red spectrum optimised for full plant life-cycle photosynthesis. Solid-state construction eliminates breakdowns entirely. At 70% efficiency it converts far more electrical input to useful light than any discharge predecessor, and the dramatic reduction in waste heat eases cooling demands. The cool blue-white light feels clinical but the numbers speak for themselves.</description>
 
@@ -262,13 +267,14 @@
       <MarketValue>900</MarketValue>
       <!-- 70% useful light; 30% waste heat – the defining LED advantage -->
       <SGL_LightEfficiency>0.70</SGL_LightEfficiency>
+      <Mass>12</Mass>
     </statBases>
 
     <costList>
       <Steel>100</Steel>
-      <Component>4</Component>
+      <ComponentIndustrial>4</ComponentIndustrial>
       <!-- Solid-state semiconductor engineering requires advanced components -->
-      <ComponentIndustrialAdv>2</ComponentIndustrialAdv>
+      <ComponentSpacer>2</ComponentSpacer>
     </costList>
 
     <comps>
@@ -305,7 +311,7 @@
        TRADE-OFF: more heat/watt → better in cold biomes
        ═══════════════════════════════════════════════════════════════ -->
   <ThingDef ParentName="SGL_GrowLampBase">
-    <defName>SGL_LEDLampMk1_Red</defName>
+    <defName>SGL_LEDLampMkI_Red</defName>
     <label>LED grow lamp Mk I (red)</label>
     <description>A red-biased LED grow lamp emphasising the 620–700 nm red and 720–740 nm far-red wavelengths that drive flowering and fruiting in most crops. The additional infrared emitters raise power draw and waste heat slightly compared to the balanced variant. In practice, the extra warmth makes this lamp the preferred choice for cold biomes or grow rooms that would otherwise need supplemental heating — the waste heat does double duty.</description>
 
@@ -314,12 +320,13 @@
       <MarketValue>950</MarketValue>
       <!-- 65% efficient: red/far-red emitters produce more IR waste than balanced blue-red -->
       <SGL_LightEfficiency>0.65</SGL_LightEfficiency>
+      <Mass>12</Mass>
     </statBases>
 
     <costList>
       <Steel>100</Steel>
-      <Component>4</Component>
-      <ComponentIndustrialAdv>2</ComponentIndustrialAdv>
+      <ComponentIndustrial>4</ComponentIndustrial>
+      <ComponentSpacer>2</ComponentSpacer>
     </costList>
 
     <comps>
@@ -356,7 +363,7 @@
        TRADE-OFF: less heat/watt → better in hot biomes
        ═══════════════════════════════════════════════════════════════ -->
   <ThingDef ParentName="SGL_GrowLampBase">
-    <defName>SGL_LEDLampMk1_Blue</defName>
+    <defName>SGL_LEDLampMkI_Blue</defName>
     <label>LED grow lamp Mk I (blue)</label>
     <description>A blue-biased LED grow lamp concentrated in the 400–500 nm range that stimulates rapid vegetative growth and compact plant structure. Running cooler and drawing less power than the red variant, it is the ideal choice for hot biomes or densely packed grow rooms where excess heat is already a problem. The vivid blue output is unusual to look at but keeps room temperatures tightest of any LED Mk I option.</description>
 
@@ -365,12 +372,13 @@
       <MarketValue>950</MarketValue>
       <!-- 75% efficient: blue-shifted emitters produce the least infrared waste -->
       <SGL_LightEfficiency>0.75</SGL_LightEfficiency>
+      <Mass>12</Mass>
     </statBases>
 
     <costList>
       <Steel>100</Steel>
-      <Component>4</Component>
-      <ComponentIndustrialAdv>2</ComponentIndustrialAdv>
+      <ComponentIndustrial>4</ComponentIndustrial>
+      <ComponentSpacer>2</ComponentSpacer>
     </costList>
 
     <comps>
@@ -416,13 +424,14 @@
       <MarketValue>2200</MarketValue>
       <!-- 85% useful light; 15% waste heat – near-theoretical ceiling for current technology -->
       <SGL_LightEfficiency>0.85</SGL_LightEfficiency>
+      <Mass>20</Mass>
     </statBases>
 
     <costList>
       <Steel>200</Steel>
-      <Component>6</Component>
+      <ComponentIndustrial>6</ComponentIndustrial>
       <!-- Precision photonics and spectral control circuitry demand significant advanced components -->
-      <ComponentIndustrialAdv>8</ComponentIndustrialAdv>
+      <ComponentSpacer>8</ComponentSpacer>
     </costList>
 
     <comps>
@@ -480,7 +489,7 @@
 
     <!-- TODO: replace with custom art once available -->
     <graphicData>
-      <texPath>Things/Building/Misc/SunLamp</texPath>
+      <texPath>Things/Building/Production/LampSun</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(1,1)</drawSize>
     </graphicData>
@@ -497,6 +506,7 @@
       <WorkToBuild>800</WorkToBuild>
       <MarketValue>500</MarketValue>
       <Beauty>-1</Beauty>
+      <Mass>6</Mass>
     </statBases>
 
     <size>(1,1)</size>
@@ -516,7 +526,7 @@
     <costList>
       <Steel>50</Steel>
       <!-- Precision spectral electronics require advanced components -->
-      <ComponentIndustrialAdv>4</ComponentIndustrialAdv>
+      <ComponentSpacer>4</ComponentSpacer>
     </costList>
 
     <comps>
@@ -528,20 +538,14 @@
       </li>
       <li Class="CompProperties_Flickable"/>
       <!--
-        Facility comp: boosts Fertility on an adjacent HydroponicsBasin by +0.40.
-        Mirrors the vanilla MultiAnalyzer pattern (CompProperties_Facility on the
-        facility building; CompAffectedByFacilities patched onto the target).
-        maxSimultaneouslyUsed 1: one controller boosts exactly one basin at a time.
-        mustBePlacedAdjacentCardinalToBuildingOfType: enforces placement discipline.
+        Facility comp: registers the controller as a linkable facility so the
+        basin patch (HydroponicsBasinPatch.xml) can establish the visual link.
+        NOTE: HydroponicsBasin.fertility is a top-level ThingDef field, not a
+        StatDef, so a stat offset cannot boost it in pure XML. A C# Comp would
+        be required to apply a growth multiplier. The link is kept for future
+        extension and visual feedback.
       -->
-      <li Class="CompProperties_Facility">
-        <statOffsets>
-          <!-- HydroponicsBasin base Fertility is 2.80; +0.40 → 3.20 (a ~14% growth boost) -->
-          <Fertility>0.40</Fertility>
-        </statOffsets>
-        <maxSimultaneouslyUsed>1</maxSimultaneouslyUsed>
-        <mustBePlacedAdjacentCardinalToBuildingOfType>HydroponicsBasin</mustBePlacedAdjacentCardinalToBuildingOfType>
-      </li>
+      <li Class="CompProperties_Facility"/>
     </comps>
 
     <designationCategory>Production</designationCategory>

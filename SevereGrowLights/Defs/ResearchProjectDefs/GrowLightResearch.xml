@@ -9,7 +9,7 @@
          └─ SGL_ElectricAgricultureII  (600)   → Halogen Grow Lamp
                └─ SGL_IndustrialGrowLighting (1000)  → Sodium Grow Lamp
                      └─ SGL_LEDAgronomy          (1600)  → LED Grow Lamp Mk I
-                          [also needs: Microelectronics, HiTechResearchBench]
+                          [also needs: MicroelectronicsBasics, HiTechResearchBench]
                              └─ SGL_AdvancedPhotonicCultivation (2400) → Advanced LED Array
                                   [also needs: HiTechResearchBench + MultiAnalyzer]
 
@@ -98,7 +98,7 @@
        TIER 4 – LED AGRONOMY
        Unlocks: SGL_LEDLampMk1 (LED Grow Lamp Mk I)
        Cost: 1600 | Spacer | Bench: HiTechResearchBench
-       Prerequisites: SGL_IndustrialGrowLighting + Microelectronics
+       Prerequisites: SGL_IndustrialGrowLighting + MicroelectronicsBasics
        ───────────────────────────────────────────────────────────── -->
   <ResearchProjectDef>
     <defName>SGL_LEDAgronomy</defName>
@@ -110,7 +110,7 @@
     <prerequisites>
       <li>SGL_IndustrialGrowLighting</li>
       <!-- Solid-state lighting requires advanced microelectronics knowledge -->
-      <li>Microelectronics</li>
+      <li>MicroelectronicsBasics</li>
     </prerequisites>
     <!-- Requires advanced research infrastructure -->
     <requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>

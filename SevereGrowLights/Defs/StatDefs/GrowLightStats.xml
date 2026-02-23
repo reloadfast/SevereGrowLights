@@ -29,8 +29,6 @@
     <defaultBaseValue>0.5</defaultBaseValue>
     <minValue>0</minValue>
     <maxValue>1</maxValue>
-    <!-- Not relevant to pawns -->
-    <showOnPawnInspectTab>false</showOnPawnInspectTab>
     <!-- Hide on buildings that haven't set this stat explicitly -->
     <showIfUndefined>false</showIfUndefined>
   </StatDef>

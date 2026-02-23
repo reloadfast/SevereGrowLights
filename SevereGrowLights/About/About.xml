@@ -1,16 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ModMetaData>
   <packageId>severemod.growlights</packageId>
   <name>Tiered Grow Lights</name>
   <author>SevereMods</author>
-  <description>Adds five tiers of artificial grow lights representing real-world lighting evolution:
+  <description
+    >Adds five tiers of artificial grow lights representing real-world lighting evolution:
 Incandescent → Halogen → High Pressure Sodium → LED Mk I → Advanced LED Array.
 
 Each tier progressively improves light radius and energy efficiency, while generating
 heat proportional to its inefficiency. Earlier lamps run hot; LED tiers run cool.
 Unlocked through a dedicated five-stage research chain.
 
-No DLC required. No Harmony patches. XML-only implementation.</description>
+No DLC required. No Harmony patches.</description>
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>
