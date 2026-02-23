@@ -1,5 +1,6 @@
 # Claude Code tool internals – never commit
 .claude/
+CLAUDE.md
 
 # OS artefacts
 .DS_Store
