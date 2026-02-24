@@ -90,6 +90,31 @@ RimWorld/Mods/
 
 ---
 
+## Textures
+
+Each lamp has a hand-generated 64×64 RGBA sprite and a matching 64×64 architect-menu icon. Sprites are stored under `SevereGrowLights/Textures/`:
+
+```
+Textures/
+├── Things/Building/Production/   ← in-world sprites (1×1 tile)
+│   ├── SGL_IncandLamp.png        circle, warm amber glow
+│   ├── SGL_HalogenLamp.png       circle, warm white glow
+│   ├── SGL_SodiumLamp.png        wide oval, deep orange glow
+│   ├── SGL_LEDLampMkI.png        square panel, cool blue-white glow
+│   ├── SGL_LEDLampMkI_Red.png    square panel, magenta-red glow
+│   ├── SGL_LEDLampMkI_Blue.png   square panel, vivid blue glow
+│   └── SGL_AdvancedLEDArray.png  3×3 sub-panel rect, neutral white glow
+└── UI/Icons/                     ← architect build-menu icons (same names)
+```
+
+To regenerate all 14 PNGs (requires [Pillow](https://pypi.org/project/Pillow/)):
+
+```
+python Tools/gen_textures.py
+```
+
+---
+
 ## File structure
 
 ```
@@ -103,10 +128,15 @@ SevereGrowLights/
 │   │   └── GrowLightResearch.xml   ← research tab + 5 projects
 │   └── StatDefs/
 │       └── GrowLightStats.xml      ← SGL_LightEfficiency stat
-└── Languages/
-    └── English/
-        └── Keyed/
-            └── GrowLights.xml      ← translator placeholder
+├── Languages/
+│   └── English/
+│       └── Keyed/
+│           └── GrowLights.xml      ← translator placeholder
+└── Textures/
+    ├── Things/Building/Production/ ← 7 in-world sprites
+    └── UI/Icons/                   ← 7 architect icons
+Tools/
+└── gen_textures.py                 ← texture generator (Python/Pillow)
 ```
 
 ---
